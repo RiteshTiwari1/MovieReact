@@ -30,7 +30,7 @@ class Movies extends Component {
         else{
             filteredMovies=this.state.movies.filter((movieObj)=>{
                 let movieName=movieObj.title.trim().toLowerCase();
-                return movieName.includes(val);
+                return movieName.includes(val.toLowerCase());
             })
 
             this.setState({filterMovies:filteredMovies,currSearchText:val});
