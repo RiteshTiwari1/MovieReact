@@ -163,15 +163,29 @@ export default class Movies extends Component {
     }
 
     pageChangeHandle=(pageNum)=>{
-        console.log("inpageHandler",pageNum);
+        // console.log("inpageHandler",pageNum);
         this.setState({currPageNumber:pageNum});
+    }
+
+    handleLimit=(e)=>{
+        let className=e.target.className;
+        let nlimit=0;
+        let currLimit=this.state.limit;
+        if(className=='up btn btn-success'){
+            nlimit=currLimit+1;
+        }
+        else if(className=='down btn btn-danger'){
+            nlimit=currLimit-1;
+        }
+
+        this.setState({limit:nlimit});
     }
 
 
 
     render() {
         console.log('render');
-        let { movies, currSearchText, currPageNumber } = this.state; //ES6 destructuring
+        let { movies, currSearchText, currPageNumber, limit} = this.state; //ES6 destructuring
         let filteredArr = [];
         if (currSearchText == '') {
             filteredArr = movies;
@@ -184,8 +198,8 @@ export default class Movies extends Component {
             })
         }
         // no. of movies per page
-        let limit=4; 
-        console.log(currPageNumber);
+        // let limit=4; 
+        // console.log(currPageNumber);
         let si=(currPageNumber-1)*limit;
         let ei=si+limit;
         let numberOfPages=Math.ceil(filteredArr.length/limit);
@@ -205,10 +219,13 @@ export default class Movies extends Component {
                         Netflix
                     </div>
                     <div className='col-9'>
+                        
                         <input className="form-control me-2" type='search' value={this.state.currSearchText} onChange={this.handleChange} ></input>
-                        <button className="up btn btn-success" type="button" onClick={this.handleChange}>+</button>
-                        {this.state.limit}
-                        <button className="down btn btn-danger" onClick={this.handleChange}>-</button>
+                        <div>
+                            <button className="up btn btn-success" type="button" onClick={this.handleLimit}>+</button>
+                            <span>{this.state.limit}</span>
+                            <button className="down btn btn-danger" onClick={this.handleLimit}>-</button>
+                        </div>
                         <table className="table">
                             <thead>
                                 <tr>
