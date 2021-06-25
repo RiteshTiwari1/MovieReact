@@ -7,38 +7,48 @@ class Movies extends Component {
         super(props);
         this.state = { 
             movies:getMovies(),
-            currSearchText:'',
-            filterMovies:getMovies()
+            currSearchText:''
         }
     }
 
     HandleDelete = (id)=>{
         let filterArr=this.state.movies.filter((movieObj)=>{
-            return movieObj._id!=id;
+            return movieObj._id!==id;
         });
 
-        this.setState({filterMovies:filterArr, movies:filterArr});
+        this.setState({movies:filterArr});
     }
 
     HandleChange=(e)=>{
         let val=e.target.value;
+        this.setState({currSearchText:val});
+        // let filteredMovies=[];
+        // if(val==''){
+        //     this.setState({filterMovies:this.state.movies,currSearchText:val});
+        //     // return;
+        // }
+        // else{
+        //     filteredMovies=this.state.movies.filter((movieObj)=>{
+        //         let movieName=movieObj.title.trim().toLowerCase();
+        //         return movieName.includes(val.toLowerCase());
+        //     })
+
+        //     this.setState({filterMovies:filteredMovies,currSearchText:val});
+        // }
+    }
+
+    render() { 
+        let val=this.state.currSearchText;
         let filteredMovies=[];
-        if(val==''){
-            this.setState({filterMovies:this.state.movies,currSearchText:val});
-            // return;
-        }
-        else{
+        if(val!==''){
             filteredMovies=this.state.movies.filter((movieObj)=>{
                 let movieName=movieObj.title.trim().toLowerCase();
                 return movieName.includes(val.toLowerCase());
             })
-
-            this.setState({filterMovies:filteredMovies,currSearchText:val});
         }
-        // let filterArr=this.state.
-    }
-
-    render() { 
+        else{
+            filteredMovies=this.state.movies;
+        }
         return (  
             <div className="container">
                 <div className="row">
@@ -52,14 +62,14 @@ class Movies extends Component {
                                 <tr>
                                     <th scope="col">Title</th>
                                     <th scope="col">Genre</th>
-                                    <th scope="col">Title</th>
-                                    <th scope="col">Title</th>
+                                    <th scope="col">Stock</th>
+                                    <th scope="col">Rate</th>
                                     <th></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {
-                                    this.state.filterMovies.map( (movieObj)=>(
+                                    filteredMovies.map( (movieObj)=>(
                                         <tr scope="row" key={movieObj._id}>
                                             <td>{movieObj.title}</td>
                                             <td>{movieObj.genre.name}</td>
