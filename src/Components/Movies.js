@@ -93,19 +93,34 @@
 
 import React, { Component } from 'react'
 import { getMovies } from './getMovies';
+import axios from 'axios';
 export default class Movies extends Component {
     constructor() {
         super();
         this.state = {
-            movies: getMovies(),
+            movies: [],
             currSearchText: '',
             currPageNumber:1,
-            limit:4
+            limit:4,
+            genres:[{_id:"123",name:"All Genres"}],
+            currGenre:"All Genres"
         }
+    }
+
+    async componentDidMount(){
+        console.log("component did mount");
+        let getMovies=await axios.get("https://backend-react-movie.herokuapp.com/movies");
+        // console.log(getMovies);
+        let allGenres=await axios.get("https://backend-react-movie.herokuapp.com/genres");
+        // console.log(allGenres);
+        this.setState({
+            movies:[...getMovies.data.movies],
+            genres:[...this.state.genres,...allGenres.data.genres]
+        })
     }
     handleChange = (e) => {
         let val = e.target.value;
-        console.log(val);
+        // console.log(val);
         this.setState({
             currSearchText: val
         })
@@ -181,11 +196,15 @@ export default class Movies extends Component {
         this.setState({limit:nlimit});
     }
 
+    handleGenreChange=(genre)=>{
+        this.setState({currGenre:genre});
+    }
+
 
 
     render() {
         console.log('render');
-        let { movies, currSearchText, currPageNumber, limit} = this.state; //ES6 destructuring
+        let { movies, currSearchText, currPageNumber, limit, genres,currGenre} = this.state; //ES6 destructuring
         let filteredArr = [];
         if (currSearchText == '') {
             filteredArr = movies;
@@ -195,6 +214,11 @@ export default class Movies extends Component {
                 let title = movieObj.title.toLowerCase();
                 // console.log(title);
                 return title.includes(currSearchText.toLowerCase());
+            })
+        }
+        if(currGenre!="All Genres"){
+            filteredArr= filteredArr.filter((movieObj)=>{
+                return movieObj.genre.name==currGenre;
             })
         }
         // no. of movies per page
@@ -209,14 +233,23 @@ export default class Movies extends Component {
         }
         let moviesPerPage=filteredArr.slice(si,ei);
         // console.log(numberOfPagesArr);
-
+        // console.log(this.state.genres)
 
         return (
             //JSX
             <div className='container'>
                 <div className='row'>
                     <div className='col-3'>
-                        Netflix
+                        <ul className="list-group">
+                            {
+                                this.state.genres.map((genreObj)=>{
+                                    let className=this.state.currGenre==genreObj.name?"list-group-item active":"list-group-item";
+                                    return(
+                                        <li key={genreObj._id} className={className} onClick={()=>{this.handleGenreChange(genreObj.name)}} >{genreObj.name}</li>
+                                    )
+                                })
+                            }
+                        </ul>
                     </div>
                     <div className='col-9'>
                         
@@ -270,14 +303,9 @@ export default class Movies extends Component {
                             <ul className="pagination">
                                 {
                                 numberOfPagesArr.map((pageNumber)=>{
-                                    let className;
+                                    
                                     // console.log(pageNumber);
-                                    if(pageNumber==currPageNumber){
-                                        className="page-item active";
-                                    }
-                                    else{
-                                        className="page-item"
-                                    }
+                                    let className=pageNumber==currPageNumber?"page-item active":"page-item"
                                     return(
                                     <li key={pageNumber} className={className} onClick={()=>{this.pageChangeHandle(pageNumber)}}><span className="page-link">{pageNumber}</span></li>
                                     )
