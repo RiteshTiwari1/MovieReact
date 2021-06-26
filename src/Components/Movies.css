@@ -1,3 +1,7 @@
+.container{
+  background-color: lightgray;
+}
+
 .nfLoader {
     position: absolute;
     top: 50%;

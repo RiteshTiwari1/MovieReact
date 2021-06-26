@@ -242,17 +242,17 @@ export default class Movies extends Component {
             //JSX
             <>
                 {
-                this.state.movies.length === 0 ?
-                 
+                    this.state.movies.length === 0 ?
+
                         <div id="loader" className="nfLoader"></div>
-              
-                      :
+
+                        :
                         <div className='container'>
 
 
                             <div className='row'>
                                 <div className='col-3'>
-                                    <ul className="list-group">
+                                    <ul className="list-group" style={{ marginTop: "20vh", marginRight: "5vw" }}>
                                         {
                                             this.state.genres.map((genreObj) => {
                                                 let className = this.state.currGenre == genreObj.name ? "list-group-item active" : "list-group-item";
@@ -264,13 +264,18 @@ export default class Movies extends Component {
                                     </ul>
                                 </div>
                                 <div className='col-9'>
-
-                                    <input className="form-control me-2" type='search' value={this.state.currSearchText} onChange={this.handleChange} ></input>
-                                    <div>
-                                        <button className="up btn btn-success" type="button" onClick={this.handleLimit}>+</button>
-                                        <span>{this.state.limit}</span>
-                                        <button className="down btn btn-danger" onClick={this.handleLimit}>-</button>
+                                    <div className="input-group mb-3" style={{ marginTop: "5vh", marginRight: "5vw" }}>
+                                        <span className="input-group-text" id="inputGroup-sizing-default">Search Movies</span>
+                                        <input type="text" className="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value={this.state.currSearchText} onChange={this.handleChange} />
                                     </div>
+                                    <div class="input-group">
+                                        <button class="up btn btn-success" type="button" onClick={this.handleLimit}>➕</button>
+
+                                        <input type="text" value={this.state.limit} style={{ width: "30px", textAlign: "center" }} />
+                                        <button class="down btn btn-danger" type="button" onClick={this.handleLimit}>➖</button>
+                                    </div>
+                                    {/* <input className="form-control me-2" type='search' value={this.state.currSearchText} onChange={this.handleChange} ></input> */}
+
                                     <table className="table">
                                         <thead>
                                             <tr>
@@ -332,6 +337,8 @@ export default class Movies extends Component {
 
                                         </ul>
                                     </nav>
+
+
 
                                 </div>
                             </div>
